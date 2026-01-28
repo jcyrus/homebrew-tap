@@ -7,15 +7,16 @@ class Ghostwire < Formula
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/jcyrus/GhostWire/releases/download/v#{version}/ghostwire-darwin-arm64"
-      sha256 "4c7bdbc6c5ab47e502a46d3f764bc889160f82ff4d73cf4dcd7f75845513ea7d"
+      sha256 "fb8f20200366d373e33556cc02dec19da3ed913a07d5651cd33478287ee20c92"
     else
       url "https://github.com/jcyrus/GhostWire/releases/download/v#{version}/ghostwire-darwin-amd64"
-      sha256 "ce86ae09fcd3791027a071e8ce95d3d9681b12d52aed7ccd9958688b906ee98d"
+      sha256 "0904b5d941d6c438abe7685f5f4d1294c8aa324319182b4f8bf300e3d9e7d86a"
     end
   end
 
   def install
-    bin.install "ghostwire-darwin-#{Hardware::CPU.arch}" => "ghostwire"
+    binary = Hardware::CPU.arm? ? "ghostwire-darwin-arm64" : "ghostwire-darwin-amd64"
+    bin.install binary => "ghostwire"
   end
 
   test do

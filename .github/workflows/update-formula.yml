@@ -1,0 +1,96 @@
+name: Update Formula
+
+on:
+  repository_dispatch:
+    types: [update-formula]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update Formula
+        run: |
+          PROJECT="${{ github.event.client_payload.project }}"
+          VERSION="${{ github.event.client_payload.version }}"
+          # Strip 'v' prefix
+          CLEAN_VERSION="${VERSION#v}"
+
+          echo "Updating $PROJECT to $VERSION ($CLEAN_VERSION)..."
+
+          FILE=""
+          if [ "$PROJECT" == "browserport" ]; then
+             FILE="Casks/$PROJECT.rb"
+          else
+             FILE="Formula/$PROJECT.rb"
+          fi
+
+          if [ ! -f "$FILE" ]; then
+            echo "Error: $FILE does not exist"
+            exit 1
+          fi
+
+          export FILE CLEAN_VERSION
+
+          python3 - <<'PY'
+            import hashlib
+            import re
+            from urllib.request import urlopen
+
+            import os
+            file_path = os.environ["FILE"]
+            version = os.environ["CLEAN_VERSION"]
+
+            with open(file_path, "r", encoding="utf-8") as f:
+              lines = f.readlines()
+
+            version_pattern = re.compile(r'^(\s*version\s+")[^"]+(".*)$')
+            url_pattern = re.compile(r'^(\s*url\s+")([^"]+)(".*)$')
+            sha_pattern = re.compile(r'^(\s*sha256\s+")[^"]+(".*)$')
+
+            def sha256_for_url(url: str) -> str:
+              digest = hashlib.sha256()
+              with urlopen(url) as response:
+                while True:
+                  chunk = response.read(1024 * 1024)
+                  if not chunk:
+                    break
+                  digest.update(chunk)
+              return digest.hexdigest()
+
+            current_url = None
+            updated_lines = []
+            for line in lines:
+              vm = version_pattern.match(line)
+              if vm:
+                line = f'{vm.group(1)}{version}{vm.group(2)}\n'
+
+              um = url_pattern.match(line)
+              if um:
+                template = um.group(2)
+                current_url = template.replace("#{version}", version).replace("$version", version)
+
+              sm = sha_pattern.match(line)
+              if sm and current_url:
+                print(f"Resolving sha256: {current_url}")
+                checksum = sha256_for_url(current_url)
+                line = f'{sm.group(1)}{checksum}{sm.group(2)}\n'
+
+              updated_lines.append(line)
+
+            with open(file_path, "w", encoding="utf-8") as f:
+              f.writelines(updated_lines)
+          PY
+
+          echo "Updated $FILE"
+          cat "$FILE"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$FILE"
+          git diff --cached --quiet && exit 0
+          git commit -m "Update $PROJECT to $VERSION"
+          git push

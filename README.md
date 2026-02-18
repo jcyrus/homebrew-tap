@@ -39,7 +39,28 @@ After installation, you can run any of the tools directly:
 ```bash
 ghostwire    # Launch GhostWire
 spektr       # Launch Spektr
+nebulavault  # Launch NebulaVault
 ```
+
+### NebulaVault
+
+High-performance, secure SSH connection manager with GPU-accelerated GUI.
+
+```bash
+brew install nebulavault
+```
+
+**Repository:** [jcyrus/nebulavault](https://github.com/jcyrus/nebulavault)
+
+### BrowserPort
+
+A cross-platform browser picker utility.
+
+```bash
+brew install --cask browserport
+```
+
+**Repository:** [jcyrus/browserport](https://github.com/jcyrus/browserport)
 
 ## Development
 

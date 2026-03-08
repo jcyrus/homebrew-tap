@@ -1,23 +1,23 @@
 class Ghostwire < Formula
   desc "Secure, ephemeral TUI chat client built with Rust and Ratatui"
   homepage "https://github.com/jcyrus/ghostwire"
-  version "0.3.2"
+  version "0.4.0"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
       url "https://github.com/jcyrus/ghostwire/releases/download/v#{version}/ghostwire-darwin-amd64"
-      sha256 "deb1518d3afb3f866ad291c906aa5b59fc73884b1fe084bc3f39fb821addb995"
+      sha256 "3845a8ccd2edfcf803e137817acc131fe1584e40efc3ab78532c865001c05ecb"
     elsif Hardware::CPU.arm?
       url "https://github.com/jcyrus/ghostwire/releases/download/v#{version}/ghostwire-darwin-arm64"
-      sha256 "7ae71e7a1665fbf6ac63ae8d2cc2d83925173034a7191ed0facd66b9dcddcf29"
+      sha256 "50af615d416001a4c5a0f2aae76565b271a086d5bd6e16b54f1f3a51c7ebe125"
     end
   end
 
   on_linux do
     if Hardware::CPU.intel?
       url "https://github.com/jcyrus/ghostwire/releases/download/v#{version}/ghostwire-linux-amd64"
-      sha256 "357d73a93453d293c5f89a78699ec0b9c35873c7299baa37cd60fc138cc43bd0"
+      sha256 "2f1254f9ac22647c2bbaed7b02362e0bb2bef42aa88ea5ad6b88407bbc758984"
     end
   end
 
@@ -30,7 +30,6 @@ class Ghostwire < Formula
   end
 
   test do
-    # Basic smoke test - check binary executes
     system "#{bin}/ghostwire", "--version"
   end
 end

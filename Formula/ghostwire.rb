@@ -1,23 +1,23 @@
 class Ghostwire < Formula
   desc "Secure, ephemeral TUI chat client built with Rust and Ratatui"
   homepage "https://github.com/jcyrus/ghostwire"
-  version "0.4.1"
+  version "0.5.0"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
       url "https://github.com/jcyrus/ghostwire/releases/download/v#{version}/ghostwire-darwin-amd64"
-      sha256 "b21c321063396bbc4c19e33b8c7da0b581a74278d76fef738e8f5c8fe71e30e1"
+      sha256 "b24d2ff48bad86ab4d70a2839ede978f4b2f4766328f309b3f262622679f1230"
     elsif Hardware::CPU.arm?
       url "https://github.com/jcyrus/ghostwire/releases/download/v#{version}/ghostwire-darwin-arm64"
-      sha256 "695162aedb52fc58fa3dff93ef6108edc9c4e3b0e959647d7eb6d6652b749682"
+      sha256 "4ee5394a75457c03219b26cb0743eb7d5ab99be0cd8cb8b7792384d6eea5624a"
     end
   end
 
   on_linux do
     if Hardware::CPU.intel?
       url "https://github.com/jcyrus/ghostwire/releases/download/v#{version}/ghostwire-linux-amd64"
-      sha256 "faefd1acf8be625e0c59ac65159e7cc4fb02bf263d39557b7dad069b762b2477"
+      sha256 "538dd0ff888c33c53e709630d91577f96fd6beecafc3947b9bd72f5e1da7388f"
     end
   end
 

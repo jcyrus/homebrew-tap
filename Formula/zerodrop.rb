@@ -1,8 +1,5 @@
-# ghostwire has been renamed to zerodrop.
-# This formula is a one-time migration shim so that `brew upgrade ghostwire`
-# delivers the renamed binary. New installs should use: brew install zerodrop
-class Ghostwire < Formula
-  desc "Renamed to zerodrop — secure, ephemeral TUI chat client"
+class Zerodrop < Formula
+  desc "Secure, ephemeral TUI chat client built with Rust and Ratatui"
   homepage "https://github.com/jcyrus/zerodrop"
   version "0.7.1"
   license "MIT"
@@ -30,7 +27,6 @@ class Ghostwire < Formula
     odie "zerodrop binary not found in release artifact" if binary.nil?
 
     bin.install binary => "zerodrop"
-    bin.install_symlink "zerodrop" => "ghostwire"
   end
 
   test do

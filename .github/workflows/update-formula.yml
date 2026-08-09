@@ -37,10 +37,10 @@ jobs:
 
           python3 - <<'PY'
           import hashlib
+          import os
           import re
           from urllib.request import urlopen
 
-          import os
           file_path = os.environ["FILE"]
           version = os.environ["CLEAN_VERSION"]
 
@@ -50,8 +50,13 @@ jobs:
           version_pattern = re.compile(r'^(\s*version\s+")[^"]+(".*)$')
           url_pattern = re.compile(r'^(\s*url\s+")([^"]+)(".*)$')
           sha_pattern = re.compile(r'^(\s*sha256\s+")[^"]+(".*)$')
+          arch_sha_pattern = re.compile(r'^([ \t]*)sha256\s+arm:\s*"[^"]*",\s*$')
+          arch_intel_pattern = re.compile(r'^[ \t]*intel:\s*"[^"]*"\s*$')
+          arch_pattern = re.compile(r'^\s*arch\s+arm:\s*"([^"]*)",\s*intel:\s*"([^"]*)"')
+
 
           def sha256_for_url(url: str) -> str:
+            print(f"Resolving sha256: {url}")
             digest = hashlib.sha256()
             with urlopen(url) as response:
               while True:
@@ -61,23 +66,69 @@ jobs:
                 digest.update(chunk)
             return digest.hexdigest()
 
+
+          def resolve(template: str) -> str:
+            return template.replace("#{version}", version).replace("$version", version)
+
+
+          # Casks that ship per-architecture builds declare `arch arm:, intel:` and
+          # interpolate #{arch} into a single url, with one sha256 per slice.
+          arch_map = None
+          for line in lines:
+            am = arch_pattern.match(line)
+            if am:
+              arch_map = (am.group(1), am.group(2))
+              break
+
+          # Index every url line up front. sha256 may legitimately appear *before* url:
+          # formulae put url first, casks put sha256 first. Keying off line order alone
+          # silently skipped the cask checksum, leaving a stale hash behind.
+          url_lines = [i for i, line in enumerate(lines) if url_pattern.match(line)]
+
           current_url = None
           updated_lines = []
-          for line in lines:
+          skip_next_intel = False
+
+          for index, line in enumerate(lines):
+            if skip_next_intel and arch_intel_pattern.match(line):
+              skip_next_intel = False
+              continue
+
             vm = version_pattern.match(line)
             if vm:
               line = f'{vm.group(1)}{version}{vm.group(2)}\n'
 
             um = url_pattern.match(line)
             if um:
-              template = um.group(2)
-              current_url = template.replace("#{version}", version).replace("$version", version)
+              current_url = resolve(um.group(2))
+
+            asm = arch_sha_pattern.match(line)
+            if asm and arch_map:
+              template = current_url
+              if template is None:
+                nxt = next((j for j in url_lines if j > index), None)
+                if nxt is not None:
+                  template = resolve(url_pattern.match(lines[nxt]).group(2))
+              if template is None:
+                raise SystemExit(f"No url found to resolve sha256 in {file_path}")
+              indent = asm.group(1)
+              arm_sha = sha256_for_url(template.replace("#{arch}", arch_map[0]))
+              intel_sha = sha256_for_url(template.replace("#{arch}", arch_map[1]))
+              updated_lines.append(f'{indent}sha256 arm:   "{arm_sha}",\n')
+              updated_lines.append(f'{indent}       intel: "{intel_sha}"\n')
+              skip_next_intel = True
+              continue
 
             sm = sha_pattern.match(line)
-            if sm and current_url:
-              print(f"Resolving sha256: {current_url}")
-              checksum = sha256_for_url(current_url)
-              line = f'{sm.group(1)}{checksum}{sm.group(2)}\n'
+            if sm:
+              template = current_url
+              if template is None:
+                # Cask layout: sha256 precedes url. Look ahead for the url it belongs to.
+                nxt = next((j for j in url_lines if j > index), None)
+                if nxt is not None:
+                  template = resolve(url_pattern.match(lines[nxt]).group(2))
+              if template is not None:
+                line = f'{sm.group(1)}{sha256_for_url(template)}{sm.group(2)}\n'
 
             updated_lines.append(line)
 

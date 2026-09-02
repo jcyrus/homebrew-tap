@@ -1,7 +1,7 @@
 class Vacate < Formula
   desc "Find and kill whatever is squatting on a port. TUI + CLI, zero bloat"
   homepage "https://github.com/jcyrus/vacate"
-  version "0.1.2"
+  version "0.1.3"
   license "MIT"
 
   head "https://github.com/jcyrus/vacate.git", branch: "main"
@@ -11,20 +11,20 @@ class Vacate < Formula
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/jcyrus/vacate/releases/download/v#{version}/vacate-v#{version}-aarch64-apple-darwin.tar.gz"
-      sha256 "583430210e73e2957b02961eae97b9de9d5c74310ec293aed9fc78b55c094d2f"
+      sha256 "a4bb998b0f9d226e48b9f48c40f5878bdec18d2ef811f09934d5e7f05fdfc5ae"
     else
       url "https://github.com/jcyrus/vacate/releases/download/v#{version}/vacate-v#{version}-x86_64-apple-darwin.tar.gz"
-      sha256 "54d477f8fccd63377500a7d72834c8ff7e513eedc9b46b94b1335b871fe69e2f"
+      sha256 "dde1e9228aedd9426f7b25599a45cd071b2017b104406f07039f24a129918159"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
       url "https://github.com/jcyrus/vacate/releases/download/v#{version}/vacate-v#{version}-aarch64-unknown-linux-gnu.tar.gz"
-      sha256 "a9575edf4e4d387f876b310d239ec8f4cfbc6b1d6569647f6600ff9d4dad7b57"
+      sha256 "4610f9d7940d982f7db345d403d74c120f3161cefeddb60817ee8d1129df9bda"
     else
       url "https://github.com/jcyrus/vacate/releases/download/v#{version}/vacate-v#{version}-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "12d5619c5934c9d7955c7aeda7445f11b58a54f37b94baeb2399108648ca26ab"
+      sha256 "e5a64d1d1b28517c4c6b7c481f5b0e784b9297b6651e0858eeb3a6795c4ceb74"
     end
   end
 

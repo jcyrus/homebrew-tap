@@ -32,6 +32,16 @@ brew install spektr
 
 **Repository:** [jcyrus/spektr](https://github.com/jcyrus/spektr)
 
+### Vacate
+
+Find and kill whatever is squatting on a port. TUI + CLI, zero bloat.
+
+```bash
+brew install vacate
+```
+
+**Repository:** [jcyrus/vacate](https://github.com/jcyrus/vacate)
+
 ## Usage
 
 After installation, you can run any of the tools directly:
@@ -39,6 +49,7 @@ After installation, you can run any of the tools directly:
 ```bash
 ghostwire    # Launch GhostWire
 spektr       # Launch Spektr
+vacate       # Launch Vacate
 nebulavault  # Launch NebulaVault
 ```
 

@@ -10,20 +10,20 @@ class Spektr < Formula
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/jcyrus/spektr/releases/download/v0.1.1/spektr-v0.1.1-aarch64-apple-darwin.tar.gz"
+      url "https://github.com/jcyrus/spektr/releases/download/v#{version}/spektr-v#{version}-aarch64-apple-darwin.tar.gz"
       sha256 "99f7651bafb50514f332bc5402ccdd8c836acc1be99544ed2fe050760e441381"
     else
-      url "https://github.com/jcyrus/spektr/releases/download/v0.1.1/spektr-v0.1.1-x86_64-apple-darwin.tar.gz"
+      url "https://github.com/jcyrus/spektr/releases/download/v#{version}/spektr-v#{version}-x86_64-apple-darwin.tar.gz"
       sha256 "322b0aef06091f57672f27f672667e6b3c8b97fd293959d5916907882a16791a"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url "https://github.com/jcyrus/spektr/releases/download/v0.1.1/spektr-v0.1.1-aarch64-unknown-linux-gnu.tar.gz"
+      url "https://github.com/jcyrus/spektr/releases/download/v#{version}/spektr-v#{version}-aarch64-unknown-linux-gnu.tar.gz"
       sha256 "b8a73e694df464b8c6e9f040602df131757c1fcfaa6ecf3b4383a12b60021a9f"
     else
-      url "https://github.com/jcyrus/spektr/releases/download/v0.1.1/spektr-v0.1.1-x86_64-unknown-linux-gnu.tar.gz"
+      url "https://github.com/jcyrus/spektr/releases/download/v#{version}/spektr-v#{version}-x86_64-unknown-linux-gnu.tar.gz"
       sha256 "c679c92af49dfb66e468febae4fdec56200ecd46299b336315ab2c5c92c2fefc"
     end
   end

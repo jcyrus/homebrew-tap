@@ -1,10 +1,10 @@
 cask "firebreak" do
-  version "1.0.0"
-  sha256 "80d02339da5cb73764db2e5f4ddc5f60da07c1688d90f12a701b0e306448e82e"
+  version "1.1.0"
+  sha256 "946684e3adac9f2d6e4616ccdd85e7f65e0e37cf405c322927967d0411a88f35"
 
   url "https://github.com/jcyrus/firebreak/releases/download/v#{version}/Firebreak-#{version}.dmg"
   name "Firebreak"
-  desc "Native macOS thermal watchdog and runaway process swarm breaker"
+  desc "Native thermal watchdog and runaway process swarm breaker"
   homepage "https://github.com/jcyrus/firebreak"
 
   depends_on macos: :sonoma

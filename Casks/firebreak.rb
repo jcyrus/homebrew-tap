@@ -1,6 +1,6 @@
 cask "firebreak" do
-  version "1.1.0"
-  sha256 "946684e3adac9f2d6e4616ccdd85e7f65e0e37cf405c322927967d0411a88f35"
+  version "1.1.1"
+  sha256 "fa24c4b8f9ab704548ab3d645a22ec9250b28725e3170d1f4872bec885dc2e1b"
 
   url "https://github.com/jcyrus/firebreak/releases/download/v#{version}/Firebreak-#{version}.dmg"
   name "Firebreak"
